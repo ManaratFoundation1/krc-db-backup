@@ -5,8 +5,6 @@
 # Run this before installing to catch issues early
 #################################################################
 
-set -e
-
 # Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -30,10 +28,10 @@ print_status() {
         echo -e "${GREEN}✓${NC} $message"
     elif [ "$status" = "ERROR" ]; then
         echo -e "${RED}✗${NC} $message"
-        ((ERRORS++))
+        ERRORS=$((ERRORS + 1))
     elif [ "$status" = "WARN" ]; then
         echo -e "${YELLOW}⚠${NC} $message"
-        ((WARNINGS++))
+        WARNINGS=$((WARNINGS + 1))
     fi
 }
 

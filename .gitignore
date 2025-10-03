@@ -1,0 +1,27 @@
+# Environment variables
+.env
+
+# Backup files
+*.sql
+*.sql.gz
+*.backup
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# macOS
+.DS_Store
+
+# Linux
+*~
+.directory
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo

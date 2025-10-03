@@ -1,0 +1,38 @@
+[Unit]
+Description=PostgreSQL Backup Service
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=oneshot
+User=postgres
+Group=postgres
+
+# Working directory (where .env is located)
+WorkingDirectory=/opt/pg-backup
+
+# Execute the backup script
+ExecStart=/opt/pg-backup/pg-backup.sh
+
+# Restart policy
+Restart=on-failure
+RestartSec=5m
+
+# Resource limits
+CPUQuota=50%
+MemoryLimit=2G
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=pg-backup
+
+# Security hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/tmp/pg-backups /var/log/pg-backup
+
+[Install]
+WantedBy=multi-user.target

@@ -362,11 +362,12 @@ main() {
     log "INFO" "PostgreSQL Backup Script Started"
     log "INFO" "=========================================="
     
-    # Generate backup name with format: HH:MM_DD-MM-YYYY
-    local backup_timestamp=$(date '+%H:%M_%d-%m-%Y')
-    local backup_name="${backup_timestamp}"
+    # Generate backup name with format: {DB}_backup_YYYY-MM-DD_HH-MM
+    # Example: krc_backup_2025-10-03_20-46.backup
+    local backup_timestamp=$(date '+%Y-%m-%d_%H-%M')
+    local backup_name="${PG_DATABASE}_backup_${backup_timestamp}"
     
-    log "INFO" "Backup name: ${backup_name}"
+    log "INFO" "Backup name: ${backup_name}.backup"
     
     # Check prerequisites
     check_aws_cli

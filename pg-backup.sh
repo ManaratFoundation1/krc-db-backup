@@ -94,8 +94,9 @@ get_available_space() {
 # Function: Emergency cleanup of temporary files
 emergency_cleanup() {
     log "WARN" "Emergency cleanup triggered - removing temporary backup files"
-    find "${BACKUP_LOCAL_DIR}" -name "*.sql.gz" -type f -delete 2>/dev/null || true
+    find "${BACKUP_LOCAL_DIR}" -name "*.backup" -type f -delete 2>/dev/null || true
     find "${BACKUP_LOCAL_DIR}" -name "*.sql" -type f -delete 2>/dev/null || true
+    find "${BACKUP_LOCAL_DIR}" -name "*.sql.gz" -type f -delete 2>/dev/null || true
 }
 
 # Function: Check disk space before backup
@@ -225,7 +226,7 @@ validate_backup_size() {
 # Function: Create PostgreSQL backup
 create_backup() {
     local backup_name="$1"
-    local backup_file="${BACKUP_LOCAL_DIR}/${backup_name}.sql.gz"
+    local backup_file="${BACKUP_LOCAL_DIR}/${backup_name}.backup"
     
     log "INFO" "Starting backup for database: ${PG_DATABASE}"
     log "INFO" "Backup file: ${backup_file}"
@@ -233,7 +234,8 @@ create_backup() {
     # Record start time and space
     local start_space=$(get_available_space "${BACKUP_LOCAL_DIR}")
     
-    # Create backup with pg_dump and compress with gzip
+    # Create backup with pg_dump (custom format is already compressed)
+    log "INFO" "Running pg_dump..."
     if PGPASSWORD="${PGPASSWORD}" pg_dump \
         -h "${PG_HOST}" \
         -p "${PG_PORT}" \
@@ -242,7 +244,7 @@ create_backup() {
         -F c \
         -b \
         -v \
-        -f - 2>>"${LOG_FILE}" | gzip -9 > "${backup_file}"; then
+        -f "${backup_file}" 2>>"${LOG_FILE}"; then
         
         # Check if backup file was created
         if [ ! -f "${backup_file}" ] || [ ! -s "${backup_file}" ]; then

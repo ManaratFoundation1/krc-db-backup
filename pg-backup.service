@@ -20,7 +20,7 @@ RestartSec=5m
 
 # Resource limits
 CPUQuota=50%
-MemoryLimit=2G
+MemoryMax=2G
 
 # Logging
 StandardOutput=journal
@@ -28,11 +28,20 @@ StandardError=journal
 SyslogIdentifier=pg-backup
 
 # Security hardening
+# Balanced security for backup operations - allows necessary access while restricting unnecessary capabilities
 NoNewPrivileges=true
-PrivateTmp=true
-ProtectSystem=strict
-ProtectHome=true
-ReadWritePaths=/tmp/pg-backups /var/log/pg-backup
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+LockPersonality=true
+RestrictNamespaces=true
+
+# File system restrictions
+# Note: PrivateTmp and ProtectSystem removed to allow backup file operations
+# Note: ProtectHome removed to allow access to PostgreSQL data directory if needed
 
 [Install]
 WantedBy=multi-user.target

@@ -44,6 +44,11 @@ MIN_SIZE_PERCENTAGE="${MIN_SIZE_PERCENTAGE:-50}"
 MIN_FREE_SPACE_GB="${MIN_FREE_SPACE_GB:-5}"  # Minimum free space to maintain (GB)
 SPACE_MULTIPLIER="${SPACE_MULTIPLIER:-3}"  # Required free space = expected backup size * multiplier
 
+# Ensure AWS credentials are exported for AWS CLI
+export AWS_ACCESS_KEY_ID
+export AWS_SECRET_ACCESS_KEY
+export AWS_REGION
+
 # Create directories if they don't exist
 mkdir -p "${BACKUP_LOCAL_DIR}"
 mkdir -p "${LOG_DIR}"
@@ -57,7 +62,7 @@ log() {
     local level="$1"
     shift
     local message="$*"
-    echo "[$(date '+%Y-%m-%d %H:%M:%S')] [$level] $message" | tee -a "${LOG_FILE}"
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] [$level] $message" | tee -a "${LOG_FILE}" >&2
 }
 
 # Function: Log and exit on error

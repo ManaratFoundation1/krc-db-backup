@@ -1,13 +1,10 @@
 [Unit]
-Description=PostgreSQL Backup Timer - Twice Daily (7 AM and 7 PM UTC+3)
+Description=PostgreSQL Backup Timer - Daily at 12:00 PM UTC+3
 Requires=pg-backup.service
 
 [Timer]
-# Run at 7:00 AM UTC+3 (04:00 UTC)
-OnCalendar=*-*-* 04:00:00
-
-# Run at 7:00 PM UTC+3 (16:00 UTC)
-OnCalendar=*-*-* 16:00:00
+# Run at 12:00 PM UTC+3 (09:00 UTC)
+OnCalendar=*-*-* 09:00:00
 
 # If system was powered off during scheduled time, run backup on next boot
 Persistent=true
